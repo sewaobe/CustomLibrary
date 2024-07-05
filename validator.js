@@ -1,3 +1,4 @@
+console.log("Connect Library Success");
 function Validator(formSelector, options) {
     var formElement = document.querySelector(formSelector);
     var formRules = {};
