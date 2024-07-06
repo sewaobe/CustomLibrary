@@ -26,19 +26,19 @@ function Validator(formSelector, options) {
             for (var input of inputs) {
                 switch (input.type) {
                     case 'radio':
-                        input.checked ? (formData[input.name] = input.value) : 'No checked';
+                        input.checked ? (formData[input.id] = input.value) : 'No checked';
 
                         break;
                     case 'checkbox':
                         input.checked
-                            ? Array.isArray(formData[input.name])
-                                ? formData[input.name].push(input.value)
-                                : (formData[input.name] = [input.value])
+                            ? Array.isArray(formData[input.id])
+                                ? formData[input.id].push(input.value)
+                                : (formData[input.id] = [input.value])
                             : 'No checked';
                         break;
                     default:
                         // Get value input text
-                        formData[input.name] = input.value;
+                        formData[input.id] = input.value;
 
                         break;
                 }
@@ -119,7 +119,7 @@ function Validator(formSelector, options) {
         }
 
         //Check invalid first => break && display error message
-        for (var validType of formRules[input.name]) {
+        for (var validType of formRules[input.id]) {
             if (errorMessage) break;
 
             errorMessage = validType(input.value);
@@ -146,7 +146,7 @@ function Validator(formSelector, options) {
 
     // has formElement
     if (formElement) {
-        var inputs = formElement.querySelectorAll('[name][rules]');
+        var inputs = formElement.querySelectorAll('[id][rules]');
 
         for (var input of inputs) {
             var rules = input.getAttribute('rules').split('|');
@@ -185,9 +185,9 @@ function Validator(formSelector, options) {
                     }
                 }
                 if (Array.isArray(formRules[input.name])) {
-                    formRules[input.name].push(ruleValue);
+                    formRules[input.id].push(ruleValue);
                 } else {
-                    formRules[input.name] = [ruleValue];
+                    formRules[input.id] = [ruleValue];
                 }
             }
             //Event onblur => Check errors messages!
