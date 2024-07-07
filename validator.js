@@ -1,4 +1,4 @@
-console.log("Connect Library Success");
+console.log('Connect Library Success');
 function Validator(formSelector, options) {
     var formElement = document.querySelector(formSelector);
     var formRules = {};
@@ -28,7 +28,9 @@ function Validator(formSelector, options) {
             for (var input of inputs) {
                 switch (input.type) {
                     case 'radio':
-                        input.checked ? (formData[input.id] = input.value) : 'No checked';
+                        input.checked
+                            ? (formData[input.id] = input.value)
+                            : 'No checked';
 
                         break;
                     case 'checkbox':
@@ -50,53 +52,57 @@ function Validator(formSelector, options) {
             }
 
             if (isValid) {
-                if(!validatorDate()) {
-                    for(var data in formData) delete formData[data];
+                if (!validatorDate()) {
+                    for (var data in formData) delete formData[data];
                     return;
                 }
 
-                if(options.toastMessage){
-                toastMessage(
-                    options.toastMessage.idToastSelector,
-                    options.toastMessage.classToastSelector,
-                    options.toastMessage.contentToastSelector
-                );
-            }
+                if (options.toastMessage) {
+                    toastMessage(
+                        options.toastMessage.idToastSelector,
+                        options.toastMessage.classToastSelector,
+                        options.toastMessage.contentToastSelector
+                    );
+                }
                 __this.onSubmit(formData);
             }
         };
     }
     //function check Date
     function validatorDate() {
-        var inputDayElement = formElement.querySelector(`input[rules=${options.errorDate.rulesInputDay}]`);
-        var { parentElement, errorElement } = getErrorElement(inputDayElement, options.errorElement);
-        if(!validatorDayOfMonth()) {
+        var inputDayElement = formElement.querySelector(
+            `input[rules="${options.errorDate.rulesInputDay}"]`
+        );
+        var { parentElement, errorElement } = getErrorElement(
+            inputDayElement,
+            options.errorElement
+        );
+        if (!validatorDayOfMonth()) {
             errorElement.innerText = options.errorDate.errorMessage;
             parentElement.classList.add('inValid');
             return false;
-            
         }
 
-        if(parentElement.classList.contains('inValid') ){
+        if (parentElement.classList.contains('inValid')) {
             errorElement.innerText = '';
             parentElement.classList.remove('inValid');
         }
         return true;
-    
     }
     //function check Day Of Month valid
     function validatorDayOfMonth() {
-        var dayOfMonth = [x, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-        if(formDate.dateMonth == 2) {
-            if((formDate.dateYear % 4 == 0 && formDate.dateYear % 100 != 0) || formDate.dateYear % 400 == 0) {
-                if(formDate.dateDay > 29)    return false;
+        var dayOfMonth = [32, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        if (formDate.dateMonth == 2) {
+            if (
+                (formDate.dateYear % 4 == 0 && formDate.dateYear % 100 != 0) ||
+                formDate.dateYear % 400 == 0
+            ) {
+                if (formDate.dateDay > 29) return false;
+            } else {
+                if (formDate.dateDay > 28) return false;
             }
-            else {
-                if(formDate.dateDay > 28)    return false;
-            }
-        }
-        else{
-            if(formDate.dateDay > dayOfMonth[formDate.dateMonth])    return false;
+        } else {
+            if (formDate.dateDay > dayOfMonth[formDate.dateMonth]) return false;
         }
         return true;
     }
@@ -114,36 +120,45 @@ function Validator(formSelector, options) {
                 return regex.test(value) ? undefined : message;
             };
         },
-        
+
         password: function (min) {
-            return function (message = `Please enter a valid password minimum length ${min}`) {
+            return function (
+                message = `Please enter a valid password minimum length ${min}`
+            ) {
                 return function (value) {
                     return value.length > min ? undefined : message;
                 };
             };
         },
-        
-        dateDay: function (message = "Must be a valid day") { 
+
+        dateDay: function (message = 'Must be a valid day') {
             return function (value) {
                 value = Number(value);
-                if(isNaN(Number(value)) || value > 31 || value < 1 ) return message;
-                formDate[dateDay] = value;
+                if (isNaN(Number(value)) || value > 31 || value < 1)
+                    return message;
+                formDate['dateDay'] = value;
                 return undefined;
             };
         },
-        dateMonth: function (message = "Must be a valid month") { 
+        dateMonth: function (message = 'Must be a valid month') {
             return function (value) {
                 value = Number(value);
-                if(isNaN(Number(value)) || value > 12 || value < 1 ) return message;
-                formDate[dateMonth] = value;
+                if (isNaN(Number(value)) || value > 12 || value < 1)
+                    return message;
+                formDate['dateMonth'] = value;
                 return undefined;
             };
         },
-        dateYear: function (message = "Must be in the past") { 
+        dateYear: function (message = 'Must be in the past') {
             return function (value) {
                 value = Number(value);
-                if(isNaN(Number(value)) || value > date.getFullYear() || value < 0 ) return message;
-                formDate[dateYear] = value;
+                if (
+                    isNaN(Number(value)) ||
+                    value > date.getFullYear() ||
+                    value < 0
+                )
+                    return message;
+                formDate['dateYear'] = value;
                 return undefined;
             };
         },
@@ -154,11 +169,15 @@ function Validator(formSelector, options) {
         var input = e.target ? e.target : e;
 
         var errorMessage;
-        var { parentElement, errorElement } = getErrorElement(input, options.errorElement);
+        var { parentElement, errorElement } = getErrorElement(
+            input,
+            options.errorElement
+        );
         switch (input.type) {
             case 'radio':
                 // Get value input text => Has: set value / No has: Set error message.
-                parentElement.querySelectorAll('input[type="radio"]:checked').length !== 0
+                parentElement.querySelectorAll('input[type="radio"]:checked')
+                    .length !== 0
                     ? 'Checked'
                     : (errorMessage = 'Please select a query type');
 
@@ -175,9 +194,11 @@ function Validator(formSelector, options) {
                 }
                 break;
             case 'checkbox':
-                parentElement.querySelectorAll('input[type="checkbox"]:checked').length !== 0
+                parentElement.querySelectorAll('input[type="checkbox"]:checked')
+                    .length !== 0
                     ? 'Checked'
-                    : (errorMessage = 'To submit this form, please consent to being contacted');
+                    : (errorMessage =
+                          'To submit this form, please consent to being contacted');
                 break;
             default:
                 break;
@@ -201,7 +222,10 @@ function Validator(formSelector, options) {
     };
 
     var handleInput = function (e) {
-        var { parentElement, errorElement } = getErrorElement(e.target, options.errorElement);
+        var { parentElement, errorElement } = getErrorElement(
+            e.target,
+            options.errorElement
+        );
 
         if (parentElement.classList.contains('inValid')) {
             errorElement.innerText = '';
@@ -224,7 +248,9 @@ function Validator(formSelector, options) {
                 if (rule.includes('(')) {
                     ruleField = rule.split('(')[0];
 
-                    ruleLength = rule.split('(')[1].substring(0, rule.split('(')[1].indexOf(')'));
+                    ruleLength = rule
+                        .split('(')[1]
+                        .substring(0, rule.split('(')[1].indexOf(')'));
 
                     //Has message error
                     if (rule.includes(':')) {
@@ -242,14 +268,19 @@ function Validator(formSelector, options) {
                 else {
                     if (ruleLength) {
                         if (ruleMessage)
-                            ruleValue = validatorRules[ruleField](ruleLength)(ruleMessage);
-                        else ruleValue = validatorRules[ruleField](ruleLength)();
+                            ruleValue =
+                                validatorRules[ruleField](ruleLength)(
+                                    ruleMessage
+                                );
+                        else
+                            ruleValue = validatorRules[ruleField](ruleLength)();
                     } else {
-                        if (ruleMessage) ruleValue = validatorRules[ruleField](ruleMessage);
+                        if (ruleMessage)
+                            ruleValue = validatorRules[ruleField](ruleMessage);
                         else ruleValue = validatorRules[ruleField]();
                     }
                 }
-                if (Array.isArray(formRules[input.name])) {
+                if (Array.isArray(formRules[input.id])) {
                     formRules[input.id].push(ruleValue);
                 } else {
                     formRules[input.id] = [ruleValue];
@@ -257,7 +288,6 @@ function Validator(formSelector, options) {
             }
             //Event onblur => Check errors messages!
             input.onblur = handleInputBlur;
-
             //Event onInput => Remove validation
             input.oninput = handleInput;
         }
@@ -267,7 +297,11 @@ function Validator(formSelector, options) {
     }
 }
 
-function toastMessage(idToastSelector, classToastSelector, contentToastSelector) {
+function toastMessage(
+    idToastSelector,
+    classToastSelector,
+    contentToastSelector
+) {
     const toast = document.querySelector(idToastSelector);
     if (toast) {
         const toastMessage = document.createElement('div');
