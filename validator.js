@@ -3,7 +3,9 @@ function Validator(formSelector, options) {
     var formElement = document.querySelector(formSelector);
     var formRules = {};
     var formData = {};
+    var formDate = {};
     var __this = this;
+    var date = new Date();
 
     //Get parent and error elements in input error
     function getErrorElement(element, selector) {
@@ -48,6 +50,10 @@ function Validator(formSelector, options) {
             }
 
             if (isValid) {
+                if(!validatorDate()) {
+                    for(var data in formData) delete formData[data];
+                    break;
+                }
 
                 if(options.toastMessage){
                 toastMessage(
@@ -60,7 +66,40 @@ function Validator(formSelector, options) {
             }
         };
     }
+    //function check Date
+    function validatorDate() {
+        var inputDayElement = formElement.querySelector('input[rules="${options.errorDate.rulesInputDay}"]');
+        var { parentElement, errorElement } = getErrorElement(inputDayElement, options.errorElement);
+        if(!validatorDayOfMonth()) {
+            errorElement.innerText = options.errorDate.errorMessage;
+            parentElement.classList.add('inValid');
+            return false;
+            
+        }
 
+        if(parentElement.classList.contains('inValid') {
+            errorElement.innerText = '';
+            parentElement.classList.remove('inValid');
+        }
+        return true;
+    
+    }
+    //function check Day Of Month valid
+    function validatorDayOfMonth() {
+        var dayOfMonth = [x, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+        if(formDate.dateMonth == 2) {
+            if((formDate.dateYear % 4 == 0 && formDate.dateYear % 100 != 0) || formDate.dateYear % 400 == 0) {
+                if(formDate.dateDay > 29)    return false;
+            }
+            else {
+                if(formDate.dateDay > 28)    return false;
+            }
+        }
+        else{
+            if(formDate.dateDay > dayOfMonth[formDate.dateMonth])    return false;
+        }
+        return true;
+    }
     //function validatorRules => Defined rules for validation.
     var validatorRules = {
         required: function (message = 'The field is required') {
@@ -75,11 +114,37 @@ function Validator(formSelector, options) {
                 return regex.test(value) ? undefined : message;
             };
         },
+        
         password: function (min) {
             return function (message = `Please enter a valid password minimum length ${min}`) {
                 return function (value) {
                     return value.length > min ? undefined : message;
                 };
+            };
+        },
+        
+        date-day: function (message = "Must be a valid day") { 
+            return function (value) {
+                value = Number(value);
+                if(isNaN(Number(value)) || value > 31 || value < 1 ) return message;
+                formDate[dateDay] = value;
+                return undefined;
+            };
+        },
+        date-month: function (message = "Must be a valid month") { 
+            return function (value) {
+                value = Number(value);
+                if(isNaN(Number(value)) || value > 12 || value < 1 ) return message;
+                formDate[dateMonth] = value;
+                return undefined;
+            };
+        },
+        date-year: function (message = "Must be in the past") { 
+            return function (value) {
+                value = Number(value);
+                if(isNaN(Number(value)) || value > date.getFullYear() || value < 0 ) return message;
+                formDate[dateYear] = value;
+                return undefined;
             };
         },
     };
