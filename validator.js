@@ -52,7 +52,7 @@ function Validator(formSelector, options) {
             if (isValid) {
                 if(!validatorDate()) {
                     for(var data in formData) delete formData[data];
-                    break;
+                    return;
                 }
 
                 if(options.toastMessage){
@@ -68,7 +68,7 @@ function Validator(formSelector, options) {
     }
     //function check Date
     function validatorDate() {
-        var inputDayElement = formElement.querySelector('input[rules="${options.errorDate.rulesInputDay}"]');
+        var inputDayElement = formElement.querySelector(`input[rules=${options.errorDate.rulesInputDay}]`);
         var { parentElement, errorElement } = getErrorElement(inputDayElement, options.errorElement);
         if(!validatorDayOfMonth()) {
             errorElement.innerText = options.errorDate.errorMessage;
@@ -77,7 +77,7 @@ function Validator(formSelector, options) {
             
         }
 
-        if(parentElement.classList.contains('inValid') {
+        if(parentElement.classList.contains('inValid') ){
             errorElement.innerText = '';
             parentElement.classList.remove('inValid');
         }
@@ -123,7 +123,7 @@ function Validator(formSelector, options) {
             };
         },
         
-        date-day: function (message = "Must be a valid day") { 
+        dateDay: function (message = "Must be a valid day") { 
             return function (value) {
                 value = Number(value);
                 if(isNaN(Number(value)) || value > 31 || value < 1 ) return message;
@@ -131,7 +131,7 @@ function Validator(formSelector, options) {
                 return undefined;
             };
         },
-        date-month: function (message = "Must be a valid month") { 
+        dateMonth: function (message = "Must be a valid month") { 
             return function (value) {
                 value = Number(value);
                 if(isNaN(Number(value)) || value > 12 || value < 1 ) return message;
@@ -139,7 +139,7 @@ function Validator(formSelector, options) {
                 return undefined;
             };
         },
-        date-year: function (message = "Must be in the past") { 
+        dateYear: function (message = "Must be in the past") { 
             return function (value) {
                 value = Number(value);
                 if(isNaN(Number(value)) || value > date.getFullYear() || value < 0 ) return message;
